@@ -48,6 +48,7 @@
 
                 // eslint-disable-next-line no-console
                 console.log(order);
+                this.$store.dispatch('buyStock', order);
                 this.quantity = 0;
             }
         },
