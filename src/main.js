@@ -19,6 +19,11 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(BootstrapVue);
 
+// Filters
+Vue.filter('currency', (value) => {
+  return '$' + value.toLocaleString();
+});
+
 Vue.config.productionTip = false;
 
 new Vue({

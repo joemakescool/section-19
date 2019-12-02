@@ -3,7 +3,7 @@
 
         <div class="col-sm-6 col-md-4 col-xs-12">
             <h3>A stock</h3>
-            <div class="panel panel-success">
+            <div class="panel panel-info">
                 <h3 class="panel-title">
                     {{ stock.name }}
                     <small>(Price: {{ stock.price }} | Quantity: {{ stock.quantity }})</small>
@@ -11,7 +11,7 @@
                 <div class="panel-body">
                     <div class="pull-left">
                         <label>
-                            <input type="number" class="form-control" placeholder="Quantity" v-model="quantity">
+                            <input type="number" class="form-control" placeholder="Quantity" v-model="quantity" :class="{danger: insufficientQuantity}">
                         </label>
                     </div>
 
@@ -19,9 +19,9 @@
                         <button
                                 class="btn btn-success"
                                 @click="sellStock"
-                                :disabled="quantity <=0 || !Number.isInteger(quantity)"
+                                :disabled="insufficientQuantity || quantity <=0 || !Number.isInteger(quantity)"
                         >
-                            Sell Stock
+                            {{ insufficientQuantity ? 'Not enough stocks' : 'Sell' }}
                         </button>
                     </div>
                 </div>
@@ -39,9 +39,14 @@
         data: () =>({
             quantity: 0
         }),
+        computed: {
+          insufficientQuantity() {
+              return this.quantity > this.stock.quantity;
+          },
+        },
         methods: {
             ...mapActions({
-                sellStock: 'sellStock'
+                placeSellOrder: 'sellStock'
             }),
             sellStock() {
                 const order = {
@@ -49,7 +54,8 @@
                     stockPrice: this.stock.price,
                     quantity: this.quantity
                 };
-                this.sellStock();
+                this.placeSellOrder(order);
+                this.quantity = 0;
             }
         },
 
@@ -58,5 +64,8 @@
 </script>
 
 <style scoped>
+    .danger {
+        border: 1px solid crimson;
+    }
 
 </style>
